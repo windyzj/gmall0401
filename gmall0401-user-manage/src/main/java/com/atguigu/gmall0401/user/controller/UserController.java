@@ -1,8 +1,8 @@
 package com.atguigu.gmall0401.user.controller;
 
 
-import com.atguigu.gmall0401.user.bean.UserInfo;
-import com.atguigu.gmall0401.user.service.UserService;
+import com.atguigu.gmall0401.bean.UserInfo;
+import com.atguigu.gmall0401.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

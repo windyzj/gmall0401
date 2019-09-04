@@ -8,15 +8,12 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../gmall0401-parent/pom.xml</relativePath>
     </parent>
-    <groupId>com.atguigu.gmall0401</groupId>
-    <artifactId>gmall0401-user-manage</artifactId>
+    <artifactId>gmall0401-order-web</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gmall0401-user-manage</name>
+    <name>gmall0401-order-web</name>
     <description>Demo project for Spring Boot</description>
 
-    <properties>
-        <java.version>1.8</java.version>
-    </properties>
+
 
     <dependencies>
         <dependency>
@@ -27,7 +24,7 @@
 
         <dependency>
             <groupId>com.atguigu.gmall0401</groupId>
-            <artifactId>gmall0401-util-service</artifactId>
+            <artifactId>gmall0401-util-web</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>
