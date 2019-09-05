@@ -17,7 +17,7 @@ public class OrderController {
     @GetMapping("trade")
     public UserInfo trade(@RequestParam("userid") String userid){
         UserInfo userInfo = userService.getUserInfoById(userid);
-
+        System.out.println("123123");
         return  userInfo;
     }
 }

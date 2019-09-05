@@ -2,13 +2,9 @@ package com.atguigu.gmall0401.manage.controller;
 
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall0401.bean.BaseCatalog1;
-import com.atguigu.gmall0401.bean.BaseCatalog2;
-import com.atguigu.gmall0401.bean.BaseCatalog3;
+import com.atguigu.gmall0401.bean.*;
 import com.atguigu.gmall0401.service.ManageService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,4 +36,34 @@ public class ManageController {
         List<BaseCatalog3> baseCatalog3List = manageService.getCatalog3(catalog2Id);
         return baseCatalog3List;
     }
+
+    @GetMapping("attrInfoList")
+    public List<BaseAttrInfo> getBaseAttrInfoList(String catalog3Id){
+        List<BaseAttrInfo> attrList = manageService.getAttrList(catalog3Id);
+        System.out.println("!111111111111");
+        return attrList;
+
+    }
+
+    @PostMapping("saveAttrInfo")
+    public String saveAttrInfo(@RequestBody BaseAttrInfo baseAttrInfo){
+
+        manageService.saveAttrInfo(baseAttrInfo);
+        return  "success";
+
+    }
+
+    @PostMapping("getAttrValueList")
+    public List<BaseAttrValue>  getAttrValueList(String attrId){
+
+        BaseAttrInfo baseAttrInfo = manageService.getBaseAttrInfo(attrId);
+
+        List<BaseAttrValue> attrValueList = baseAttrInfo.getAttrValueList();
+
+        return attrValueList;
+
+    }
+
+
+
 }
