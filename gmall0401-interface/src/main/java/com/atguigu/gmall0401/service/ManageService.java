@@ -1,9 +1,6 @@
 package com.atguigu.gmall0401.service;
 
-import com.atguigu.gmall0401.bean.BaseAttrInfo;
-import com.atguigu.gmall0401.bean.BaseCatalog1;
-import com.atguigu.gmall0401.bean.BaseCatalog2;
-import com.atguigu.gmall0401.bean.BaseCatalog3;
+import com.atguigu.gmall0401.bean.*;
 
 import java.util.List;
 
@@ -33,6 +30,15 @@ public interface ManageService {
 
 
     //删除平台属性
+
+    //获得基本销售属性
+    public List<BaseSaleAttr> getBaseSaleAttrList();
+
+    //保存spu信息
+    public void saveSpuInfo(SpuInfo spuInfo);
+
+    //根据三级分类查询spu列表
+    public List<SpuInfo> getSpuList(String catalog3Id);
 
 
 }
