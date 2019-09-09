@@ -40,5 +40,14 @@ public interface ManageService {
     //根据三级分类查询spu列表
     public List<SpuInfo> getSpuList(String catalog3Id);
 
+    //根据spuid查询图片列表
+    public List<SpuImage> getSpuImageList(String spuId);
+
+    //根据spuid查询销售属性
+    public List<SpuSaleAttr> getSpuSaleAttrList(String spuId);
+
+    //保存skuinfo
+    public void  saveSkuInfo(SkuInfo skuInfo);
+
 
 }

@@ -15,6 +15,14 @@ import java.util.List;
 public class ManageServiceImpl implements ManageService {
 
     @Autowired
+    SkuAttrValueMapper skuAttrValueMapper;
+    @Autowired
+     SkuImageMapper skuImageMapper;
+    @Autowired
+    SkuInfoMapper skuInfoMapper;
+    @Autowired
+     SkuSaleAttrValueMapper skuSaleAttrValueMapper;
+    @Autowired
     SpuImageMapper spuImageMapper;
     @Autowired
     SpuInfoMapper spuInfoMapper;
@@ -64,12 +72,21 @@ public class ManageServiceImpl implements ManageService {
     @Override
     public List<BaseAttrInfo> getAttrList(String catalog3Id) {
 
-        Example example = new Example(BaseAttrInfo.class);
-        example.createCriteria().andEqualTo("catalog3Id",catalog3Id);
+//        Example example = new Example(BaseAttrInfo.class);
+//        example.createCriteria().andEqualTo("catalog3Id",catalog3Id);
+//        List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectByExample(example);
+//        //查询平台属性值
+//        for (BaseAttrInfo baseAttrInfo : baseAttrInfoList) {
+//            BaseAttrValue baseAttrValue = new BaseAttrValue();
+//            baseAttrValue.setAttrId(baseAttrInfo.getId());
+//            List<BaseAttrValue> baseAttrValueList = baseAttrValueMapper.select(baseAttrValue);
+//            baseAttrInfo.setAttrValueList(baseAttrValueList);
+//        }
 
-        List<BaseAttrInfo> baseAttrInfoList = baseAttrInfoMapper.selectByExample(example);
+        List<BaseAttrInfo> baseAttrList = baseAttrInfoMapper.getBaseAttrInfoListByCatalog3Id(catalog3Id);
 
-        return baseAttrInfoList;
+
+        return baseAttrList;
     }
 
     @Override
@@ -148,4 +165,61 @@ public class ManageServiceImpl implements ManageService {
         spuInfo.setCatalog3Id(catalog3Id);
         return spuInfoMapper.select(spuInfo);
     }
+
+    @Override
+    public List<SpuImage> getSpuImageList(String spuId) {
+        SpuImage spuImage = new SpuImage();
+        spuImage.setSpuId(spuId);
+        return spuImageMapper.select(spuImage);
+    }
+
+    @Override
+    public List<SpuSaleAttr> getSpuSaleAttrList(String spuId) {
+        return spuSaleAttrMapper.getSpuSaleAttrListBySpuId(spuId);
+    }
+
+    @Override
+    @Transactional
+    public void saveSkuInfo(SkuInfo skuInfo) {
+        //保存 1 基本信息
+        if(skuInfo.getId()==null ||skuInfo.getId().length()==0) {
+            skuInfoMapper.insertSelective(skuInfo);
+        }else{
+            skuInfoMapper.updateByPrimaryKeySelective (skuInfo);
+        }
+        //2 平台属性
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuInfo.getId());
+        skuAttrValueMapper.delete(skuAttrValue);
+
+        List<SkuAttrValue> skuAttrValueList = skuInfo.getSkuAttrValueList();
+        for (SkuAttrValue attrValue : skuAttrValueList) {
+            attrValue.setSkuId(skuInfo.getId());
+            skuAttrValueMapper.insertSelective(attrValue);
+        }
+
+
+        //3 销售属性
+        SkuSaleAttrValue skuSaleAttrValue =new SkuSaleAttrValue();
+        skuSaleAttrValue.setSkuId(skuInfo.getId());
+        skuSaleAttrValueMapper.delete(skuSaleAttrValue);
+        List<SkuSaleAttrValue> skuSaleAttrValueList = skuInfo.getSkuSaleAttrValueList();
+        for (SkuSaleAttrValue saleAttrValue : skuSaleAttrValueList) {
+            saleAttrValue.setSkuId(skuInfo.getId());
+            skuSaleAttrValueMapper.insertSelective(saleAttrValue);
+
+        }
+        //4 图片
+        SkuImage skuImage4Del =new SkuImage();
+        skuImage4Del.setId(skuInfo.getId());
+        skuImageMapper.delete(skuImage4Del);
+
+        for (SkuImage skuImage : skuInfo.getSkuImageList()) {
+            skuImage.setSkuId(skuInfo.getId());
+            skuImageMapper.insertSelective(skuImage);
+        }
+
+
+    }
+
 }
