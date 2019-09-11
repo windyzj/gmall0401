@@ -49,5 +49,9 @@ public interface ManageService {
     //保存skuinfo
     public void  saveSkuInfo(SkuInfo skuInfo);
 
+    // 查询skuInfo
+    public SkuInfo getSkuInfo(String skuId);
+
+
 
 }
