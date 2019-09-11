@@ -3,6 +3,7 @@ package com.atguigu.gmall0401.service;
 import com.atguigu.gmall0401.bean.*;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ManageService {
 
@@ -52,6 +53,10 @@ public interface ManageService {
     // 查询skuInfo
     public SkuInfo getSkuInfo(String skuId);
 
+    //根据spuid查询销售属性,选中传入的sku涉及的销售属性
+    public List<SpuSaleAttr> getSpuSaleAttrListCheckSku(String skuId ,String spuId);
 
+    //根据spuid查询已有的sku涉及的销售属性清单
+    public Map getSkuValueIdsMap(String spuId);
 
 }

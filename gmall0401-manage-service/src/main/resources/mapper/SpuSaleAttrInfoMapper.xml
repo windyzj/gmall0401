@@ -14,7 +14,7 @@
         <result property="spuId" column="spu_id"></result>
         <result property="saleAttrId" column="sale_attr_id"></result>
         <result property="saleAttrName" column="sale_attr_name"></result>
-        <collection property="spuSaleAttrValueList" ofType="com.atguigu.gmall0401.bean.SpuSaleAttrValue">
+        <collection property="spuSaleAttrValueList" ofType="com.atguigu.gmall0401.bean.SpuSaleAttrValue" autoMapping="true">
             <result property="id" column="sale_attr_value_id"></result>
             <result property="spuId" column="spu_id"></result>
             <result property="saleAttrId" column="sale_attr_id"></result>
@@ -22,6 +22,18 @@
         </collection>
 
     </resultMap>
+
+
+    <select id="getSpuSaleAttrListBySpuIdCheckSku"  resultMap="saleAttrList">
+       SELECT
+        sa.id, sa.spu_id ,sa.sale_attr_id ,sa.sale_attr_name,
+        sv.id sale_attr_value_id , sv.sale_attr_value_name,
+        IF( sav.sale_attr_value_id IS NULL ,'0','1') is_checked
+        FROM `spu_sale_attr`  sa JOIN `spu_sale_attr_value` sv  ON sa.sale_attr_id =sv.sale_attr_id  AND sa.spu_id=sv.spu_id
+        LEFT JOIN sku_sale_attr_value  sav ON sv.id=sav.sale_attr_value_id AND sav.sku_id=#{skuId}
+        WHERE sa.spu_id =#{spuId}
+
+   </select>
 
 
 </mapper>

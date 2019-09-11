@@ -61,6 +61,7 @@ $(function(){
 			var checkDivs = $(".redborder div");
 			console.log("len:"+checkDivs.length)
 			var valueIds="";
+			//把红框div中的元素遍历 ，提取每个元素的value ，用|组合成字符串
             for (var i = 0; i < checkDivs.length; i++) {
                 var saleAttrValueDiv = checkDivs.eq(i);
                 if(i>0){
@@ -72,10 +73,15 @@ $(function(){
             console.log("valueIds:"+valueIds);
             var valuesSku = $("#valuesSku").attr("value");
             console.log("valuesSku:"+valuesSku);
-            var valuesSkuJson=JSON.parse(valuesSku);
-            var skuId= valuesSkuJson[valueIds];
+            var valuesSkuMap=JSON.parse(valuesSku);
+            var skuId= valuesSkuMap[valueIds];  //map.get()
 			console.log("skuId:"+skuId);
 			var skuIdSelf=$("#skuId").val();
+			//1 查出来要跳转的是自己的sku
+			 //2 没查出来对应的skuID
+			 //3 需要跳转的skuId
+
+
 			if(skuId){
 				if(skuId==skuIdSelf){
                     $("#cartBtn").attr("class","box-btns-two");

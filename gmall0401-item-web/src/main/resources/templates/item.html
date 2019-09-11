@@ -219,22 +219,22 @@
 						  
 						<div class="box-attr-3">
 						<br/>
-							<div class="box-attr-2 clear"  >
+							<div class="box-attr-2 clear"  th:each="spuSaleAttr:${spuSaleAttrList}" >
 								<dl>
-									<dt >选择颜色</dt>
-									<dd  class="redborder" >
-										<div  >
+									<dt th:text="'选择'+${spuSaleAttr.saleAttrName}">选择颜色</dt>
+									<dd   th:class="(${spuSaleAttrValue.isChecked}=='1')?'redborder':''"      th:each="spuSaleAttrValue:${spuSaleAttr.spuSaleAttrValueList}" >
+										<div  th:value="${spuSaleAttrValue.id}" th:text="${spuSaleAttrValue.saleAttrValueName}">
 											  摩卡金
 										</div>
 									</dd>
-									<dd  class="" >
+<!--									<dd  class="" >
 										<div  >
 											  太空银
 										</div>
-									</dd>
+									</dd>-->
 								</dl>
 							</div>
-							<div class="box-attr-2 clear">
+<!--							<div class="box-attr-2 clear">
 								<dl>
 									<dt>选择版本</dt>
 									<dd>
@@ -244,7 +244,7 @@
 										<a href="#">套装版</a>
 									</dd>
 								</dl>
-							</div>
+							</div>-->
 <!--
 							<div class="box-attr-2 clear">
 								<dl>
@@ -264,7 +264,9 @@
 							<div class="box-btns-one">
 								<form id="itemForm" action="http://cart.gmall.com/addToCart" method="post">
 								<input type="text" name="num" id="" value="1" />
-								<input type="hidden" name="skuId"   />
+								<input type="hidden" name="skuId" id="skuId" th:value="${skuInfo.id}"  />
+							    <input type="hidden"  id="valuesSku" name="valuesSku"  th:value="${valuesSkuJson}"  />
+
 
 								<div class="box-btns-one1">
 
