@@ -250,26 +250,34 @@ public class ManageServiceImpl implements ManageService {
 
     public SkuInfo getSkuInfoDB(String skuId) {
         System.err.println(Thread.currentThread()+"读取数据库！！");
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(3000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         SkuInfo skuInfo = skuInfoMapper.selectByPrimaryKey(skuId);
         if(skuInfo==null){
             return null;
         }
-
+        //图片
         SkuImage skuImage = new SkuImage();
         skuImage.setSkuId(skuId);
         List<SkuImage> skuImageList = skuImageMapper.select(skuImage);
         skuInfo.setSkuImageList(skuImageList);
 
+        //销售属性
         SkuSaleAttrValue skuSaleAttrValue = new SkuSaleAttrValue();
         skuSaleAttrValue.setSkuId(skuId);
         List<SkuSaleAttrValue> skuSaleAttrValueList = skuSaleAttrValueMapper.select(skuSaleAttrValue);
         skuInfo.setSkuSaleAttrValueList(skuSaleAttrValueList);
+
+        //平台属性
+        SkuAttrValue skuAttrValue = new SkuAttrValue();
+        skuAttrValue.setSkuId(skuId);
+        List<SkuAttrValue> skuAttrValueList = skuAttrValueMapper.select(skuAttrValue);
+        skuInfo.setSkuAttrValueList(skuAttrValueList);
+
 
         return skuInfo;
     }
