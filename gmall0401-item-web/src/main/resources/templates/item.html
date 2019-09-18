@@ -57,7 +57,7 @@
 							</li>
 						</ul>
 						<ul class="header_ul_right">
-							<li style="border: 0;"><a href="http://passport.atguigu.com/index.html" class="aa" >你好，请登录</a></li>
+							<li style="border: 0;"><span th:text="(${nickName}!=null)? ${nickName}:''"></span>  <a href="http://passport.atguigu.com/index.html" class="aa" >你好，请登录</a></li>
 							<li><a href="http://passport.atguigu.com/index.html" style="color: red;">免费注册</a> |</li>
 							<li><a href="javascript:;" class="aa">我的订单</a> |</li>
  
