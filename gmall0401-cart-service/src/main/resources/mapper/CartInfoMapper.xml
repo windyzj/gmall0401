@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper SYSTEM "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.atguigu.gmall0401.cart.mapper.CartInfoMapper">
+    <select id="selectCartListWithSkuPrice" resultMap="cartMap">
+        SELECT ci.id,ci.user_id,ci.sku_id,ci.cart_price ,ci.sku_num ,ci.img_url,ci.sku_name, si.price sku_price
+        FROM cart_info  ci JOIN   sku_info si  ON  ci.sku_id=si.id
+        WHERE ci.user_id=#{userId}
+
+    </select>
+
+    <resultMap id="cartMap" type="com.atguigu.gmall0401.bean.CartInfo" autoMapping="true">
+    </resultMap>
+
+    <insert id="mergeCartList">
+        INSERT INTO  cart_info (user_id ,sku_id,cart_price ,sku_num,img_url,sku_name)
+        SELECT #{userIdDest} ,sku_id,cart_price ,sku_num,img_url,sku_name FROM cart_info cc WHERE cc.user_id=#{userIdOrig}
+        ON DUPLICATE KEY UPDATE cart_info.`sku_num`=cart_info.`sku_num`+cc.sku_num
+    </insert>
+
+</mapper>
