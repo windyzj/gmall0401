@@ -86,7 +86,7 @@
 
                     <div>
                         <ol>
-                            <li><input type="checkbox"   class="check"   onchange="checkSku(this)"  /></li>
+                            <li><input type="checkbox"  th:checked="(${cartInfo.isChecked=='1'})?'true':'false'"  class="check"  th:value="${cartInfo.skuId}"  onchange="checkSku(this)"  /></li>
                             <li>
                                 <dt><img  th:src="${cartInfo.imgUrl}"  src="img\shop1.jpg" alt=""></dt>
                                 <dd   th:onclick="'toItem('+${cartInfo.skuId}+')'" onclick="toItem(1)">
@@ -105,7 +105,7 @@
                                     <span>+</span>
                                 </p>
                             </li>
-                            <li style="font-weight:bold"><p class="zj" th:text="${cartInfo.skuNum}*${#numbers.formatDecimal(cartInfo.skuPrice,1,2)}" >￥22995.00</p></li>
+                            <li style="font-weight:bold"><p class="zj" th:text="'￥'+${cartInfo.skuNum}*${#numbers.formatDecimal(cartInfo.skuPrice,1,2)}" >￥22995.00</p></li>
                             <li>
                                 <p>删除</p>
                             </li>
@@ -176,7 +176,7 @@
 
                 </ol>
             </div>
-            <div><button  onclick="toTrade()" type="button">去结算</button></div>
+            <div><button    th:onclick="(${userId}==null) ?'javascript:alert(\'请先登录!\')':'toTrade()'" type="button">去结算</button></div>
         </div>
     </div>
 </div>
@@ -265,8 +265,8 @@
 <script src="./js/index.js" charset="utf-8"></script>
 <script type="text/javascript">
 
-     function toTrade(){
-         window.location.href="http://cart.gmall.com/toTrade";
+     function toTrade(userId){
+         window.location.href="http://order.gmall.com/trade";
     }
     function toItem(skuId) {
         window.location.href="http://item.gmall.com/"+skuId+".html";
@@ -712,6 +712,7 @@
     })
 
     $(function() {
+        sumSumPrice();
         //声明变量记录索引
         var index = 0;
         //点击右边按钮

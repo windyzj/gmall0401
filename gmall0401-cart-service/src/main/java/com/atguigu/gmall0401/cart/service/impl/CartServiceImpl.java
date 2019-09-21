@@ -29,8 +29,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartInfo addCart(String userId, String skuId, Integer num) {
-
-
+        // 为了防止 更新购物车前 缓存过期
+        loadCartCacheIfNotExists(  userId) ;
         // 加数据库
         // 尝试取出已有的数据    如果有  把数量更新 update   如果没有insert
         CartInfo cartInfoQuery=new CartInfo();
@@ -59,19 +59,11 @@ public class CartServiceImpl implements CartService {
             cartInfoExists=cartInfo;
         }
 
-      //  Jedis jedis = redisUtil.getJedis();
-        // 加缓存
-        //   type  hash     key   cart:101:info     field   skuId   value   cartInfoJson
-        //   如果购物车中已有该sku  增加个数  如果没有新增一条
-/*        String cartKey="cart:"+userId+":info";
-        String cartInfoJson = JSON.toJSONString(cartInfoExists);
-        jedis.hset(cartKey,skuId,cartInfoJson) ;//新增 也可以覆盖*/
-
-       // jedis.close();
         loadCartCache(userId);
 
-        return cartInfoExists;
 
+
+        return cartInfoExists;
     }
 
     @Override
@@ -86,14 +78,12 @@ public class CartServiceImpl implements CartService {
                 CartInfo cartInfo = JSON.parseObject(cartJson, CartInfo.class);
                 cartList.add(cartInfo);
             }
-
             cartList.sort(new Comparator<CartInfo>() {
                 @Override
                 public int compare(CartInfo o1, CartInfo o2) {
                     return o2.getId().compareTo(o1.getId());
                 }
             });
-
             return    cartList;
         }else {
             //缓存未命中  //缓存没有查数据库 ，同时加载到缓存中
@@ -116,11 +106,16 @@ public class CartServiceImpl implements CartService {
         CartInfo cartInfo = new CartInfo();
         cartInfo.setUserId(userIdOrig);
         cartInfoMapper.delete(cartInfo);
+        Jedis jedis = redisUtil.getJedis();
+        jedis.del("cart:"+userIdOrig+":info");
+        jedis.close();
         // 3 重新读取数据 加载缓存
         List<CartInfo> cartInfoList = loadCartCache(userIdDest);
 
         return cartInfoList;
     }
+
+
 
     /**
      *  缓存没有查数据库 ，同时加载到缓存中
@@ -147,4 +142,64 @@ public class CartServiceImpl implements CartService {
         return  cartInfoList;
 
     }
+
+    public void  loadCartCacheIfNotExists(String userId){
+        String cartkey="cart:"+userId+":info";
+        Jedis jedis = redisUtil.getJedis();
+        Long ttl = jedis.ttl(cartkey);
+        int ttlInt = ttl.intValue();
+        jedis.expire(cartkey,ttlInt+10);
+        Boolean exists = jedis.exists(cartkey);
+        jedis.close();
+        if( !exists){
+             loadCartCache( userId);
+        }
+
+    }
+
+
+    @Override
+    public void checkCart(String userId, String skuId, String isChecked) {
+        loadCartCacheIfNotExists(userId);// 检查一下缓存是否存在 避免因为缓存失效造成 缓存和数据库不一致
+
+            //  isCheck数据 值保存在缓存中
+        //保存标志
+        String cartKey = "cart:" + userId + ":info";
+        Jedis jedis = redisUtil.getJedis();
+        String cartInfoJson = jedis.hget(cartKey, skuId);
+        CartInfo cartInfo = JSON.parseObject(cartInfoJson, CartInfo.class);
+        cartInfo.setIsChecked(isChecked);
+        String cartInfoJsonNew = JSON.toJSONString(cartInfo);
+        jedis.hset(cartKey,skuId,cartInfoJsonNew);
+        // 为了订单结账 把所有勾中的商品单独 在存放到一个checked购物车中
+        String cartCheckedKey = "cart:" + userId + ":checked";
+        if(isChecked.equals("1")){  //勾中加入到待结账购物车中， 取消勾中从待结账购物车中删除
+            jedis.hset(cartCheckedKey,skuId,cartInfoJsonNew);
+            jedis.expire(cartCheckedKey,60*60);
+        }else{
+            jedis.hdel(cartCheckedKey,skuId);
+        }
+        jedis.close();
+
+    }
+
+    @Override
+    public List<CartInfo> getCheckedCartList(String userId) {
+        String cartCheckedKey = "cart:" + userId + ":checked";
+        Jedis jedis = redisUtil.getJedis();
+
+        List<String> checkedCartList = jedis.hvals(cartCheckedKey);
+        List<CartInfo> cartInfoList=new ArrayList<>();
+        for (String cartInfoJson : checkedCartList) {
+            CartInfo cartInfo = JSON.parseObject(cartInfoJson, CartInfo.class);
+            cartInfoList.add(cartInfo);
+        }
+
+
+        jedis.close();
+
+        return cartInfoList;
+    }
+
+
 }
