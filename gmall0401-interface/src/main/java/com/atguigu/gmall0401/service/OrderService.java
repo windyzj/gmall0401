@@ -5,7 +5,9 @@ import com.atguigu.gmall0401.bean.OrderInfo;
 public interface OrderService {
 
 
-    public  void  saveOrder(OrderInfo orderInfo);
+    public  String  saveOrder(OrderInfo orderInfo);
+
+    public  OrderInfo getOrderInfo(String orderId);
 
     public  String  genToken(String userId);
 

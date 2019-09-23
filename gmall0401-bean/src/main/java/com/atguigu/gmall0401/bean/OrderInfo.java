@@ -80,4 +80,12 @@ public class OrderInfo implements Serializable {
         this.totalAmount=  totalAmount;
     }
 
+
+    public String genSubject(){
+        if(orderDetailList.size()>0) {
+            OrderDetail orderDetail = orderDetailList.get(0);
+             return orderDetail.getSkuName()+"等"+orderDetailList.size()+"件商品";
+        }
+        return null;
+    }
 }

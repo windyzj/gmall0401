@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void saveOrder(OrderInfo orderInfo) {
+    public String saveOrder(OrderInfo orderInfo) {
 
         orderInfoMapper.insertSelective(orderInfo);
 
@@ -40,6 +40,18 @@ public class OrderServiceImpl implements OrderService {
             orderDetailMapper.insertSelective(orderDetail);
         }
 
+        return orderInfo.getId();
+
+    }
+
+    @Override
+    public OrderInfo getOrderInfo(String orderId) {
+        OrderInfo orderInfo = orderInfoMapper.selectByPrimaryKey(orderId);
+        OrderDetail orderDetail = new OrderDetail();
+        orderDetail.setOrderId(orderId);
+        List<OrderDetail> orderDetailList = orderDetailMapper.select(orderDetail);
+        orderInfo.setOrderDetailList(orderDetailList);
+        return orderInfo;
     }
 
     @Override
