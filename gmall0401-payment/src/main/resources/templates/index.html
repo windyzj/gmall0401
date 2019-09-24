@@ -66,7 +66,7 @@
 
     <form    method="post" id="paymentForm">
 
-         <input type="hidden" name="orderId" th:value="${orderId}" >
+         <input type="hidden" id="orderId" name="orderId" th:value="${orderId}" >
     </form>
 
 
@@ -91,7 +91,7 @@
 
       /*点击微信支付生成二维码*/
       $("#weixin").click(function () {
-          $.post("wx/submit",function (data) {
+          $.post("wx/submit?orderId="+$("#orderId").val(),function (data) {
               var qr = window.qr = new QRious({
                   element: document.getElementById('qrious'),
                   size: 250,
