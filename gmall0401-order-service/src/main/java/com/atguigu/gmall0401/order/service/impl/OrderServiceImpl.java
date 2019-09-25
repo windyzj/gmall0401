@@ -3,6 +3,7 @@ package com.atguigu.gmall0401.order.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall0401.bean.OrderDetail;
 import com.atguigu.gmall0401.bean.OrderInfo;
+import com.atguigu.gmall0401.enums.ProcessStatus;
 import com.atguigu.gmall0401.order.mapper.OrderDetailMapper;
 import com.atguigu.gmall0401.order.mapper.OrderInfoMapper;
 import com.atguigu.gmall0401.service.OrderService;
@@ -84,5 +85,23 @@ public class OrderServiceImpl implements OrderService {
             }
 
         }
+
+
+
+    @Override
+    public void updateStatus(String orderId, ProcessStatus processStatus, OrderInfo... orderInfos) {
+        OrderInfo orderInfo = new OrderInfo();
+        if(orderInfos!=null&& orderInfos.length>0 ){ //如果还需要附带更新其他订单信息则 使用可变参数中的订单信息
+            orderInfo=orderInfos[0];
+        }
+        orderInfo.setProcessStatus(processStatus);
+        orderInfo.setOrderStatus(processStatus.getOrderStatus());
+        orderInfo.setId(orderId);
+        orderInfoMapper.updateByPrimaryKeySelective(orderInfo);
+
+    }
+
+
+
 
 }

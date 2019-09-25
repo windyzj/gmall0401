@@ -10,6 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -87,5 +88,16 @@ public class HttpclientUtil {
         }
 
         return  null;
+    }
+
+
+    @Test
+    public  void test(){
+        int i=0;
+        int j=0;
+        j=(i++);
+
+        System.out.println("i = " + i);
+        System.out.println("j = " + j);
     }
 }

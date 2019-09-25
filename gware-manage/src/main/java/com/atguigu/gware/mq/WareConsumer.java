@@ -26,7 +26,7 @@ import java.util.*;
  * @param
  * @return
  */
-
+@Component
 public class WareConsumer {
 
 

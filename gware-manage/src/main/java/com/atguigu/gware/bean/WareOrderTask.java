@@ -57,6 +57,9 @@ public class WareOrderTask {
     private String taskComment;
 
     @Transient
+    private String taskStatusComment;
+
+    @Transient
     private List<WareOrderTaskDetail> details;
 
     public String getId() {
@@ -171,5 +174,9 @@ public class WareOrderTask {
 
     public void setTaskComment(String taskComment) {
         this.taskComment = taskComment;
+    }
+
+    public String getTaskStatusComment() {
+        return taskStatus.getComment();
     }
 }

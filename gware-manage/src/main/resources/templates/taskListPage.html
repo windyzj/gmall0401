@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8"/>
+	<title>工作单</title>
+
+<!-- ${sxt } 表示取得项目名称的跟路径-->
+<script type="text/javascript" src="easyui/jquery.min.js"></script>
+<script type="text/javascript" src="easyui/jquery.easyui.min.js"></script>
+<script type="text/javascript" src="easyui/easyloader.js"></script>
+<link rel="stylesheet" type="text/css" href="easyui/themes/icon.css">
+<link rel="stylesheet" type="text/css"
+	href="easyui/themes/default/easyui.css">
+<script type="text/javascript" src="easyui/locale/easyui-lang-zh_CN.js"></script>
+</head>
+
+<body>
+
+<table id="orderTaskDatagrid" class="easyui-datagrid" title="库存工作单"
+	   data-options="singleSelect:true,method:'get',url:'taskList' ,toolbar:'#orderTaskTb'">
+	<thead>
+	<tr>
+		<th data-options="field:'id'" width="5%">工作单号 </th>
+		<th data-options="field:'orderId'" width="30%">订单号</th>
+		<th data-options="field:'wareId'" width="10%">仓库编号</th>
+		<th data-options="field:'orderBody'" width="10%">货物描述</th>
+		<th data-options="field:'consignee'" width="10%">收货人 </th>
+		<th data-options="field:'deliveryAddress'" width="10%">收货地址 </th>
+		<th data-options="field:'trackingNo'" width="10%">运单号 </th>
+		<th data-options="field:'taskStatusComment'" width="10%">状态 </th>
+	</tr>
+	</thead>
+</table>
+
+
+	<!-- 用来定义工具栏 -->
+	<div id="orderTaskTb">
+		<button class="easyui-linkbutton" plain="true" data-options="iconCls:'icon-edit' "
+			onclick="delivery()">发货</button>
+
+	</div>
+	<!-- 设置添加，编辑窗口 -->
+	<div id="deliveryDlg" class="easyui-dialog"
+		style="width: 400px; height: 200px;" closed="true" buttons="#deliveryBtns"
+		data-options="iconCls:'icon-save',resizable:true,modal:true">
+		<!-- 将数据提交到后台 
+  	  	form 少了一个action。
+  	  -->
+		<br>
+		<form id="fm" method="post">
+			<div>
+				<label>运单号:</label> <input class="easyui-validatebox"
+					type="text" id="trackingNo" data-options="required:true" />
+			</div>
+		</form>
+		<br>
+	</div>
+	<!-- 保存，关闭 -->
+	</div>
+	<div id="deliveryBtns">
+		<a href="#" class="easyui-linkbutton" onclick="saveTracking()">保存</a>
+		<a href="#" class="easyui-linkbutton" onclick="javascript:$('#dlg').dialog('close')">关闭</a>
+	</div>
+	<!-- 显示数据 -->
+	<table id="dg"></table>
+
+</body>
+<script type="text/javascript">
+
+        function delivery() {
+			$("#deliveryDlg").dialog("open");
+        }
+
+        function saveTracking() {
+            $("#deliveryDlg").dialog("open");
+            var taskJson={};
+            var trackingNo = $("#trackingNo").val();
+            taskJson["trackingNo"]=trackingNo;
+
+            var selectedRow = $("#orderTaskDatagrid").datagrid("getSelected");
+            var taskId = selectedRow.id;
+            taskJson["id"]=taskId;
+            $.post('/delivery',taskJson,function (data) {
+				$("#deliveryDlg").dialog("close");
+				$("#orderTaskDatagrid").datagrid('reload','taskList')
+            })
+        }
+
+
+
+</script>
+
+
+</html>

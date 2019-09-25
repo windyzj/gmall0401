@@ -42,6 +42,7 @@ public class GwareController {
     public String taskListPage(){
         return "taskListPage";
     }
+
     //根据sku判断是否有库存
     @RequestMapping("hasStock")
     @ResponseBody

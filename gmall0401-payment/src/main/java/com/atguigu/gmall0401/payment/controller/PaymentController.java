@@ -93,7 +93,7 @@ public class PaymentController {
         paymentInfo.setTotalAmount(totalAmount);
 
         paymentInfoService.savePaymentInfo(paymentInfo);
-
+        paymentInfoService.sendDelayPaymentResult(outTradeNo,20L,3);
         return submitHtml;
     }
 
@@ -105,6 +105,9 @@ public class PaymentController {
 //        3     判断一下 当前支付状态的状态    未支付  更改支付状态
 //        4     用户订单状态    仓储 发货     异步方式处理
 //        5     返回 success 标志
+        if(1==1){
+            return "";
+        }
         String sign = paramMap.get("sign");
         boolean ifPass = AlipaySignature.rsaCheckV1(paramMap, AlipayConfig.alipay_public_key, "utf-8", AlipayConfig.sign_type);
         if(ifPass){

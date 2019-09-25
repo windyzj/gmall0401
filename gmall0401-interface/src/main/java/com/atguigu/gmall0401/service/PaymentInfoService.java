@@ -12,5 +12,6 @@ public interface PaymentInfoService {
 
     public  void sendPaymentToOrder(String orderId,String result) ;
 
+    public void sendDelayPaymentResult(String outTradeNo,Long delaySec ,Integer checkCount);
 
-}
+    }
