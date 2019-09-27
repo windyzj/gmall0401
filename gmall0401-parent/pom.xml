@@ -22,7 +22,7 @@
         <module>../gmall0401-order-web</module>
         <module>../gmall0401-manage-web</module>
         <module>../gmall0401-manage-service</module>
-        <module>../gmall0401-user-manage</module>
+        <module>../gmall0401-user-manage-service</module>
     </modules>
 
     <properties>

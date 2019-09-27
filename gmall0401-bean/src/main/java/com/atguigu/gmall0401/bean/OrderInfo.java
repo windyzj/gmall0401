@@ -65,7 +65,7 @@ public class OrderInfo implements Serializable {
     @Transient
     private List<OrderDetail> orderDetailList;
 
-
+    private List<OrderInfo> orderSubList;
     @Transient
     private String wareId;
 

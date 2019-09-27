@@ -46,7 +46,8 @@ public class OrderConsumer {
     }
 
     public void sendOrderToWare(String orderId){
-        String wareParamJson = initWareParamJson(orderId);
+        Map paramMap = orderService.initWareParamJson(orderId);
+        String wareParamJson = JSON.toJSONString(paramMap);
 
         Connection connection = activeMQUtil.getConnection();
         try {
@@ -65,36 +66,7 @@ public class OrderConsumer {
 
     }
 
-    /**
-     * 初始化 发送到库存系统中的参数
-     * @param orderId
-     * @return
-     */
-    private  String initWareParamJson(String orderId){
-        OrderInfo orderInfo = orderService.getOrderInfo(orderId);
 
-        Map  paramMap=new HashMap();
-
-        paramMap.put("orderId",orderId);
-        paramMap.put("consignee",orderInfo.getConsignee());
-        paramMap.put("consigneeTel",orderInfo.getConsigneeTel());
-        paramMap.put("orderComment",orderInfo.getOrderComment());
-        paramMap.put("orderBody",orderInfo.genSubject());
-        paramMap.put("deliveryAddress",orderInfo.getDeliveryAddress());
-        paramMap.put("paymentWay","2");
-        List<Map> details=new ArrayList();
-        for (OrderDetail orderDetail : orderInfo.getOrderDetailList() ){
-            HashMap<String, String> orderDetailMap = new HashMap<>();
-            orderDetailMap.put("skuId",orderDetail.getSkuId());
-            orderDetailMap.put("skuNum",orderDetail.getSkuNum().toString());
-            orderDetailMap.put("skuName",orderDetail.getSkuName());
-            details.add(orderDetailMap);
-        }
-        paramMap.put("details",details );
-        String paramJson = JSON.toJSONString(paramMap);
-        return  paramJson;
-
-    }
 
     @JmsListener(destination = "SKU_DEDUCT_QUEUE",containerFactory = "jmsQueueListener" )
     public  void  consumeWareDeduct(MapMessage mapMessage) throws JMSException {
